@@ -1,7 +1,10 @@
-# 25-26 Assignment template
+## REST API 만들기
+- 원하는 주제로 간단한 CRUD 구현
+- REST API 형식
+- Postman 테스트 결과 첨부
 
-## 사용하는 방법
-
-1. 레포를 생성할 때 해당 템플릿을 선택합니다.
-2. `.github/CODEOWNER`에 해당 파트 Core 멤버만 남깁니다.
-3. [`Auto assign`](https://github.com/apps/auto-assign) 앱을 등록합니다.
+## 형식
+1. git clone 하여 파일을 불러온 뒤,
+2. 자신의 이름으로 된 폴더 생성
+3. Rest API 폴더 생성
+4. Postman으로 실행된 사진과 함께 제출 (주의 Post, Patch method가 보이도록 올려주세요) 
