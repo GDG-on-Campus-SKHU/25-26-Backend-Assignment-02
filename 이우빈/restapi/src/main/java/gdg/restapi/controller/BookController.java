@@ -54,7 +54,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BookResponse> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         // delete 성공했을 경우 noContent(): 응답 바디 x, delete 실패했을 경우 404 not found
         return bookService.delete(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
