@@ -26,7 +26,7 @@ public class BookService {
     public List<BookResponse> getAll() {
         return bookRepository.findAll().stream()
                 .map(book -> new BookResponse(book.getId(), book.getTitle(), book.getAuthor()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public BookResponse getById(Long id) {
