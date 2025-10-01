@@ -3,8 +3,10 @@ package gdg.restapi.service;
 import gdg.restapi.domain.Book;
 import gdg.restapi.dto.request.BookRequest;
 import gdg.restapi.dto.response.BookResponse;
+import gdg.restapi.exception.IdNotFoundException;
 import gdg.restapi.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,20 +33,22 @@ public class BookService {
     public BookResponse getById(Long id) {
         return bookRepository.findById(id)
                 .map(book -> new BookResponse(book.getId(), book.getTitle(), book.getAuthor()))
-                .orElse(null);
+                .orElseThrow(() -> new IdNotFoundException(id));
     }
 
-    // NPE 방지를 위한 null 반환 대신 Optional 사용
-    public Optional<BookResponse> update(Long id, BookRequest request) {
-        return bookRepository.findById(id).map(book -> {
-            book.setTitle(request.getTitle());
-            book.setAuthor(request.getAuthor());
-            Book updated = bookRepository.update(id, book);
-            return new BookResponse(updated.getId(), updated.getTitle(), updated.getAuthor());
-        });
+    public BookResponse update(Long id, BookRequest request) {
+        bookRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException(id));
+
+        Book updated = bookRepository.update(id, new Book(id, request.getTitle(), request.getAuthor()));
+        return new BookResponse(updated.getId(), updated.getTitle(), updated.getAuthor());
     }
 
-    public boolean delete(Long id) {
-        return bookRepository.delete(id);
+    public ResponseEntity<Void> delete(Long id) {
+        bookRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException(id));
+
+        bookRepository.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

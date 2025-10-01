@@ -40,22 +40,16 @@ public class BookController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BookResponse> getById(@PathVariable Long id) {
-        BookResponse response = bookService.getById(id);
-        // response != null일 경우 200 OK + response, null일 경우 404 not found
-        return (response != null) ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(bookService.getById(id));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<BookResponse> update(@PathVariable Long id, @RequestBody BookRequest request) {
-        // NPE 방지를 위한 null 반환 대신 Optional 사용
-        return bookService.update(id, request)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(bookService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        // delete 성공했을 경우 noContent(): 응답 바디 x, delete 실패했을 경우 404 not found
-        return bookService.delete(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        return bookService.delete(id);
     }
 }
