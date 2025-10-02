@@ -4,16 +4,19 @@ import gdg.iloveyh.lecture.domain.Lecture;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class LectureRepositoryImpl implements LectureRepository {
-    private final Map<Long, Lecture> store = new HashMap<>();
+    private final Map<Long, Lecture> store = new ConcurrentHashMap<>();
     
-    private Long sequence = 0L;
+    private final AtomicLong sequence = new AtomicLong(0L);
 
     @Override
     public Lecture save(Lecture lecture) {
-        lecture.setId(++sequence);
+        Long newId = sequence.incrementAndGet();
+        lecture.setId(newId);
         store.put(lecture.getId(), lecture);
         return lecture;
     }
