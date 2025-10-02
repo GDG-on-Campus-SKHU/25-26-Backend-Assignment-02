@@ -30,17 +30,18 @@ public class LectureController {
     @GetMapping("/{id}")
     public ResponseEntity<LectureResponse> getById(@PathVariable Long id) {
         LectureResponse response = lectureService.getById(id);
-        return (response != null) ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<LectureResponse> update(@PathVariable Long id, @RequestBody LectureRequest request) {
         LectureResponse response = lectureService.update(id, request);
-        return (response != null) ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<LectureResponse> delete(@PathVariable Long id) {
-        return lectureService.delete(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        lectureService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

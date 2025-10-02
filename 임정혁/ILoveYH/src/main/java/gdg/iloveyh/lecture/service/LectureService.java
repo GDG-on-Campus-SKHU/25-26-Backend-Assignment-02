@@ -3,6 +3,7 @@ package gdg.iloveyh.lecture.service;
 import gdg.iloveyh.lecture.domain.Lecture;
 import gdg.iloveyh.lecture.dto.LectureRequest;
 import gdg.iloveyh.lecture.dto.LectureResponse;
+import gdg.iloveyh.lecture.exception.LectureNotFoundException;
 import gdg.iloveyh.lecture.repository.LectureRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,9 @@ public class LectureService {
     }
 
     public LectureResponse getById(Long id) {
-        return lectureRepository.findById(id).map(lecture-> new LectureResponse(lecture.getId(), lecture.getTitle(), lecture.getDescription(), lecture.getPrice()))
-                .orElse(null);
+        return lectureRepository.findById(id)
+                .map(lecture -> new LectureResponse(lecture.getId(), lecture.getTitle(), lecture.getDescription(), lecture.getPrice()))
+                .orElseThrow(() -> new LectureNotFoundException(id));
     }
 
     public LectureResponse update(Long id, LectureRequest request) {
@@ -39,11 +41,14 @@ public class LectureService {
             lecture.setPrice(request.getPrice());
             Lecture updated = lectureRepository.update(id, lecture);
             return new LectureResponse(updated.getId(), updated.getTitle(), updated.getDescription(), updated.getPrice());
-        }).orElse(null);
+        }).orElseThrow(() -> new LectureNotFoundException(id));
     }
 
-    public boolean delete(Long id) {
-        return lectureRepository.delete(id);
+    public void delete(Long id) {
+        if (!lectureRepository.findById(id).isPresent()) {
+            throw new LectureNotFoundException(id);
+        }
+        lectureRepository.delete(id);
     }
 }
 
