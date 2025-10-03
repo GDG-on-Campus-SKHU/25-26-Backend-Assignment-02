@@ -66,11 +66,11 @@ public class LectureService {
     public void delete(Long id) {
         log.info("강의 삭제 요청: id={}", id);
         
-        if (!lectureRepository.findById(id).isPresent()) {
+        boolean deleted = lectureRepository.delete(id);
+        if (!deleted) {
             throw new LectureNotFoundException(id);
         }
         
-        lectureRepository.delete(id);
         log.info("강의 삭제 완료: id={}", id);
     }
 }
