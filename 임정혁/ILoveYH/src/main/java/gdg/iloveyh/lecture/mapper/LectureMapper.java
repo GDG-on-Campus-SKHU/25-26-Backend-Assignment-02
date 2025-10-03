@@ -10,9 +10,9 @@ public class LectureMapper {
     
     public Lecture toEntity(LectureRequest request) {
         return Lecture.builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .price(request.getPrice())
+                .title(request.title())
+                .description(request.description())
+                .price(request.price())
                 .build();
     }
     
@@ -28,9 +28,9 @@ public class LectureMapper {
     public Lecture updateEntity(Lecture lecture, LectureRequest request) {
         return Lecture.builder()
                 .id(lecture.getId())
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .price(request.getPrice())
+                .title(request.title())
+                .description(request.description())
+                .price(request.price())
                 .build();
     }
 }

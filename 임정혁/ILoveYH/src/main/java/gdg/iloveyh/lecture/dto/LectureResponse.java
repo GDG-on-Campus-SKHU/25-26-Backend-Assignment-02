@@ -1,15 +1,8 @@
 package gdg.iloveyh.lecture.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class LectureResponse {
-    private Long id;
-    private String title;
-    private String description;
-    private Long price;
-}
+public record LectureResponse(
+    Long id,
+    String title,
+    String description,
+    Long price
+) {}

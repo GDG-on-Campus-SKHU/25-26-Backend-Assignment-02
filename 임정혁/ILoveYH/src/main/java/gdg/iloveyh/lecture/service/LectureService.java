@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -21,7 +20,7 @@ public class LectureService {
     private final LectureMapper lectureMapper;
 
     public LectureResponse create(LectureRequest request) {
-        log.info("강의 생성 요청: title={}", request.getTitle());
+        log.info("강의 생성 요청: title={}", request.title());
         
         Lecture lecture = lectureMapper.toEntity(request);
         Lecture saved = lectureRepository.save(lecture);
@@ -38,7 +37,7 @@ public class LectureService {
         log.info("전체 강의 목록 조회 완료: {}개", lectures.size());
         return lectures.stream()
                 .map(lectureMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public LectureResponse getById(Long id) {

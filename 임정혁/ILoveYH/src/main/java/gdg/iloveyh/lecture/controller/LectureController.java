@@ -23,7 +23,7 @@ public class LectureController {
     public ResponseEntity<LectureResponse> create(@Valid @RequestBody LectureRequest request) {
         log.info("POST /lecture - 강의 생성 요청");
         LectureResponse response = lectureService.create(request);
-        log.info("POST /lecture - 강의 생성 완료: id={}", response.getId());
+        log.info("POST /lecture - 강의 생성 완료: id={}", response.id());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
