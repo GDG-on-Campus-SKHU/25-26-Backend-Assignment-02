@@ -80,6 +80,9 @@ public class GameService {
     }
 
     public GameResponse updateBettingChips(Long id, GameRequest request) {
+//      요청받은 유저의 id가 유저 정보에 존재하지 않는 경우 예외 발생
+        userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 //      id값과 베팅 칩으로 베팅칩만 덮어쓰기
         return repository.findById(id)
                 .map(g -> {
