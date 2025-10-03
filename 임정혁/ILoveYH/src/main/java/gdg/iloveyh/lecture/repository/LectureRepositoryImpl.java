@@ -16,9 +16,14 @@ public class LectureRepositoryImpl implements LectureRepository {
     @Override
     public Lecture save(Lecture lecture) {
         Long newId = sequence.incrementAndGet();
-        lecture.setId(newId);
-        store.put(lecture.getId(), lecture);
-        return lecture;
+        Lecture savedLecture = Lecture.builder()
+                .id(newId)
+                .title(lecture.getTitle())
+                .description(lecture.getDescription())
+                .price(lecture.getPrice())
+                .build();
+        store.put(newId, savedLecture);
+        return savedLecture;
     }
 
     @Override
@@ -33,9 +38,14 @@ public class LectureRepositoryImpl implements LectureRepository {
 
     @Override
     public Lecture update(Long id, Lecture lecture) {
-        lecture.setId(id);
-        store.put(id, lecture);
-        return lecture;
+        Lecture updatedLecture = Lecture.builder()
+                .id(id)
+                .title(lecture.getTitle())
+                .description(lecture.getDescription())
+                .price(lecture.getPrice())
+                .build();
+        store.put(id, updatedLecture);
+        return updatedLecture;
     }
 
     @Override

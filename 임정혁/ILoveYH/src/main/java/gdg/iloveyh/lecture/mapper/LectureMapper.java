@@ -9,12 +9,11 @@ import org.springframework.stereotype.Component;
 public class LectureMapper {
     
     public Lecture toEntity(LectureRequest request) {
-        return new Lecture(
-            null,
-            request.getTitle(),
-            request.getDescription(),
-            request.getPrice()
-        );
+        return Lecture.builder()
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .price(request.getPrice())
+                .build();
     }
     
     public LectureResponse toResponse(Lecture lecture) {
@@ -26,10 +25,13 @@ public class LectureMapper {
         );
     }
     
-    public void updateEntity(Lecture lecture, LectureRequest request) {
-        lecture.setTitle(request.getTitle());
-        lecture.setDescription(request.getDescription());
-        lecture.setPrice(request.getPrice());
+    public Lecture updateEntity(Lecture lecture, LectureRequest request) {
+        return Lecture.builder()
+                .id(lecture.getId())
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .price(request.getPrice())
+                .build();
     }
 }
 

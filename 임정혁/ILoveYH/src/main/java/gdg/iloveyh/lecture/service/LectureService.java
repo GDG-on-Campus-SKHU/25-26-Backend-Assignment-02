@@ -57,8 +57,8 @@ public class LectureService {
         Lecture lecture = lectureRepository.findById(id)
                 .orElseThrow(() -> new LectureNotFoundException(id));
         
-        lectureMapper.updateEntity(lecture, request);
-        Lecture updated = lectureRepository.update(id, lecture);
+        Lecture updatedLecture = lectureMapper.updateEntity(lecture, request);
+        Lecture updated = lectureRepository.update(id, updatedLecture);
         
         log.info("강의 수정 완료: id={}", updated.getId());
         return lectureMapper.toResponse(updated);
