@@ -1,52 +1,55 @@
 package gdg.restapi.controller;
 
-import gdg.restapi.domain.Note;
-import gdg.restapi.repository.NoteRepository;
+import gdg.restapi.dto.NoteRequestDto;
+import gdg.restapi.dto.NoteResponseDto;
+import gdg.restapi.service.NoteService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/notes")
+@RequiredArgsConstructor
 public class NoteController {
 
-    private final NoteRepository repository = new NoteRepository();
-
+    private final NoteService noteService;
 
     @PostMapping
-    public Note create(@RequestBody Note note) {
-        return repository.save(note);
+    public ResponseEntity<NoteResponseDto> create(@RequestBody NoteRequestDto requestDto) {
+        return ResponseEntity.ok(noteService.create(requestDto));
     }
-
 
     @GetMapping
-    public List<Note> getAll() {
-        return repository.findAll();
+    public ResponseEntity<List<NoteResponseDto>> getAll() {
+        return ResponseEntity.ok(noteService.getAll());
     }
-
 
     @GetMapping("/{id}")
-    public Note getOne(@PathVariable Long id) {
-        Note note = repository.findById(id);
-        if (note == null) {
-            return null;
+    public ResponseEntity<NoteResponseDto> getById(@PathVariable Long id) {
+        NoteResponseDto response = noteService.getById(id);
+        if (response == null) {
+            return ResponseEntity.notFound().build();
         }
-        return note;
+        return ResponseEntity.ok(response);
     }
 
-
-    @PatchMapping("/{id}")
-    public Note update(@PathVariable Long id, @RequestBody Note note) {
-        return repository.update(id, note.getContent());
+    @PutMapping("/{id}")
+    public ResponseEntity<NoteResponseDto> update(@PathVariable Long id, @RequestBody NoteRequestDto requestDto) {
+        NoteResponseDto updated = noteService.update(id, requestDto);
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updated);
     }
-
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
-        boolean result = repository.delete(id);
-        if (!result) {
-            return "fail";
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        boolean deleted = noteService.delete(id);
+        if (!deleted) {
+            return ResponseEntity.notFound().build();
         }
-        return "success";
+        return ResponseEntity.noContent().build(); 
     }
 }
