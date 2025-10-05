@@ -29,7 +29,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<Product> findAll() {
-        return new ArrayList<>(productMap.values());
+        return List.copyOf(productMap.values());
     }
 
     @Override
