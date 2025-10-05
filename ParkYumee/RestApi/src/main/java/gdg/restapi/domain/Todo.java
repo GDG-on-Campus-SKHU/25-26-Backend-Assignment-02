@@ -1,4 +1,4 @@
-package gdg.restapi.dto;
+package gdg.restapi.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentResponse {
+public class Todo {
     private Long id;
-    private String name;
-    private String major;
+    private String title;
+    private String content;
+    private boolean isWeekly;
 }

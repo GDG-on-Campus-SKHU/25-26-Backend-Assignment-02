@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentRequest {
-    private String name;
-    private String major;
+public class TodoResponse {
+    private Long id;
+    private String todoTitle;
+    private String todoContent;
+    private boolean isWeekly;
 }
