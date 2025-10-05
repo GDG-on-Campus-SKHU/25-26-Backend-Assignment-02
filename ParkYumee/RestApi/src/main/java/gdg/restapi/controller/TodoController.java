@@ -15,7 +15,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/todolist")
 @RequiredArgsConstructor
 class TodoController {
-    public final TodoService service;
+    private final TodoService service;
 
     @PostMapping
     public ResponseEntity<TodoResponse> create(@RequestBody TodoRequest request){
