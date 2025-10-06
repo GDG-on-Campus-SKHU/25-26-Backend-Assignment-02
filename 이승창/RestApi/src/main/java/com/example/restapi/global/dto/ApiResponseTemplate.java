@@ -1,12 +1,11 @@
 package com.example.restapi.global.dto;
 
-import com.example.restapi.global.exception.code.ErrorCode;
-import com.example.restapi.global.exception.code.SuccessCode;
+import com.example.restapi.global.code.ErrorCode;
+import com.example.restapi.global.code.SuccessCode;
 import lombok.*;
 import org.springframework.http.ResponseEntity;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class ApiResponseTemplate<T> {

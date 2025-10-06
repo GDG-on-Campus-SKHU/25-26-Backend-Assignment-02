@@ -4,7 +4,8 @@ import com.example.restapi.app.dto.CartRequestDto;
 import com.example.restapi.app.dto.CartResponseDto;
 import com.example.restapi.app.service.CartService;
 import com.example.restapi.global.dto.ApiResponseTemplate;
-import com.example.restapi.global.exception.code.SuccessCode;
+import com.example.restapi.global.code.SuccessCode;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class CartController {
 
     // 장바구니 생성
     @PostMapping
-    public ResponseEntity<ApiResponseTemplate<CartResponseDto>> createCart(@RequestBody CartRequestDto cartRequestDto) {
+    public ResponseEntity<ApiResponseTemplate<CartResponseDto>> createCart(@Valid @RequestBody CartRequestDto cartRequestDto) {
         CartResponseDto created = cartService.create(cartRequestDto);
         return ApiResponseTemplate.success(SuccessCode.CART_CREATED, created);
     }

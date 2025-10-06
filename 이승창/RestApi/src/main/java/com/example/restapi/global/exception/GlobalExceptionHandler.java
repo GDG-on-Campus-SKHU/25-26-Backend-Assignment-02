@@ -1,7 +1,7 @@
 package com.example.restapi.global.exception;
 
 import com.example.restapi.global.dto.ApiResponseTemplate;
-import com.example.restapi.global.exception.code.ErrorCode;
+import com.example.restapi.global.code.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

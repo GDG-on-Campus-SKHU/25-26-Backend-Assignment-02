@@ -1,4 +1,4 @@
-package com.example.restapi.global.exception.code;
+package com.example.restapi.global.code;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
