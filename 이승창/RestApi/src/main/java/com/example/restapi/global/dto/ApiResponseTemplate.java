@@ -28,14 +28,13 @@ public class ApiResponseTemplate<T> {
     }
 
     // 실패 응답
-    public static <T> ResponseEntity<ApiResponseTemplate<T>> error(ErrorCode errorCode, T data) {
+    public static <T> ResponseEntity<ApiResponseTemplate<T>> error(ErrorCode errorCode) {
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
                 .body(ApiResponseTemplate.<T>builder()
                         .status(errorCode.getHttpStatus().value())
                         .success(false)
                         .message(errorCode.getMessage())
-                        .data(data)
                         .build());
     }
 }

@@ -20,21 +20,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponseTemplate<Void>> handleValidationException(MethodArgumentNotValidException e) {
         log.warn("Validation error: {}", e.getMessage());
-        return ApiResponseTemplate.error(ErrorCode.VALIDATION_EXCEPTION, null);
+        return ApiResponseTemplate.error(ErrorCode.VALIDATION_EXCEPTION);
     }
 
     // 잘못된 인자 (IllegalArgumentException)
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiResponseTemplate<Void>> handleIllegalArgumentException(IllegalArgumentException e) {
         log.warn("Illegal argument: {}", e.getMessage());
-        return ApiResponseTemplate.error(ErrorCode.VALIDATION_EXCEPTION, null);
+        return ApiResponseTemplate.error(ErrorCode.VALIDATION_EXCEPTION);
     }
 
     // 특정 엔티티를 찾을 수 없음 (예: Cart 없음)
     @ExceptionHandler(CartNotFoundException.class)
     public ResponseEntity<ApiResponseTemplate<Void>> handleCartNotFoundException(CartNotFoundException e) {
         log.warn("Cart not found: {}", e.getMessage());
-        return ApiResponseTemplate.error(ErrorCode.NOT_FOUND_CART_EXCEPTION, null);
+        return ApiResponseTemplate.error(ErrorCode.NOT_FOUND_CART_EXCEPTION);
     }
 
 
@@ -42,6 +42,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponseTemplate<Void>> handleException(Exception e) {
         log.error("Unexpected error", e);
-        return ApiResponseTemplate.error(ErrorCode.INTERNAL_SERVER_EXCEPTION, null);
+        return ApiResponseTemplate.error(ErrorCode.INTERNAL_SERVER_EXCEPTION);
     }
 }

@@ -17,7 +17,7 @@ public class CartRepositoryImpl implements CartRepository {
     @Override
     public Cart save(Cart cart) {
         if (cart.getId() == null) {
-            cart.setId(++sequence); // 새 엔티티
+            cart = cart.withId(++sequence); // 새 객체 생성
         }
         storage.put(cart.getId(), cart);
         return cart;
