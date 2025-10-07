@@ -6,7 +6,9 @@ import gdg.restapi.repository.TaskRepository;
 import gdg.restapi.repository.TaskRepositoryImpl;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class TaskService {
@@ -21,8 +23,8 @@ public class TaskService {
 
     public Task create(final TaskRequest request) {
         final Long id = repositoryImpl.nextId();
-        final Task task = new Task(id, request.getTitle(), request.getContent());
-        repositoryImpl.addIfAbsent(task); // putIfAbsent 활용
+        final Task task = Task.of(id, request.getTitle(), request.getContent());
+        repositoryImpl.addIfAbsent(task);
         return task;
     }
 
@@ -40,17 +42,24 @@ public class TaskService {
             return Optional.empty();
         }
         final Task task = maybeTask.get();
-        if (request.getTitle() != null) {
-            task.setTitle(request.getTitle());
-        }
-        if (request.getContent() != null) {
-            task.setContent(request.getContent());
-        }
+        applyPatch(task, request);
         repository.save(task);
         return Optional.of(task);
     }
 
-    public boolean delete(final Long id) {
-        return repository.deleteById(id);
+    public void delete(final Long id) {
+        final boolean removed = repository.deleteById(id);
+        if (!removed) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    private void applyPatch(final Task task, final TaskRequest request) {
+        if (request.getTitle() != null) {
+            task.changeTitle(request.getTitle());
+        }
+        if (request.getContent() != null) {
+            task.changeContent(request.getContent());
+        }
     }
 }

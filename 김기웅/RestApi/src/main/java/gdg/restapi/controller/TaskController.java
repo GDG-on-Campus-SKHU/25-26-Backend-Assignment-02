@@ -4,6 +4,7 @@ import gdg.restapi.domain.Task;
 import gdg.restapi.dto.TaskRequest;
 import gdg.restapi.dto.TaskResponse;
 import gdg.restapi.service.TaskService;
+import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,17 +22,14 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<TaskResponse> create(@RequestBody final TaskRequest request) {
         final Task saved = taskService.create(request);
-        return ResponseEntity
-                .created(java.net.URI.create("/api/tasks/" + saved.getId()))
+        return ResponseEntity.created(URI.create("/api/tasks/" + saved.getId()))
                 .body(new TaskResponse(saved));
     }
 
     @GetMapping
-    public List<TaskResponse> list() {
-        return taskService.findAll()
-                .stream()
-                .map(TaskResponse::new)
-                .toList(); // 불변 리스트 반환
+    public ResponseEntity<List<TaskResponse>> list() {
+        final List<TaskResponse> body = taskService.findAll().stream().map(TaskResponse::new).toList();
+        return ResponseEntity.ok(body);
     }
 
     @GetMapping("/{id}")
@@ -50,10 +48,7 @@ public class TaskController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable final Long id) {
-        final boolean removed = taskService.delete(id);
-        if (!removed) {
-            return ResponseEntity.notFound().build();
-        }
+        taskService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
