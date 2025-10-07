@@ -31,7 +31,7 @@ public class MenuService {
     public MenuResponse getById(Long id) {
         return repository.findById(id)
                 .map(MenuResponse::from)
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("ID가 없습니다."));
     }
 
     public MenuResponse update(Long id, MenuRequest request) {
@@ -40,7 +40,7 @@ public class MenuService {
             menu.setPrice(request.getPrice());
             Menu updated = repository.update(id, menu);
             return MenuResponse.from(updated);
-        }).orElse(null);
+        }).orElseThrow(() -> new IllegalArgumentException("ID가 없습니다."));
     }
 
     public boolean delete(Long id) {
