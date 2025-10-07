@@ -46,26 +46,32 @@ public class GameService {
         }
 
 //      승패 여부 참거짓 값
-        boolean isWin = false;
-//      플레이어가 블랙잭이거나 딜러보다 높은 경우
-        if(playerSum == 21 || playerSum > dealerSum)
-            isWin = true;
-//      그렇지 않으면 패배
-        if(dealerSum == 21)
-            isWin = false;
+        Integer result = 0;
+
+        if(dealerSum.equals((long)21) || dealerSum > playerSum) {
+//          만약 딜러가 21이거나 플레이어보다 큰 경우 패배
+            result = -1;
+        } else {
+//          플레이어가 합이 높다면 승리(이때 딜러의 최대 합은 20까지 이기 때문에 플레이어 합 21에 대한 경우는 쓸 필요 없음)
+            if (playerSum > dealerSum)
+                result = 1;
+//          같다면 무승부
+            if (playerSum.equals(dealerSum))
+                result = 0;
+        }
 
 //      게임 내용 저장
-        Game game = new Game(request.getUserId(), null, request.getBettingChips(), dealerCards, playerCards, isWin);
+        Game game = new Game(request.getUserId(), null, request.getBettingChips(), dealerCards, playerCards, result);
         Game saved = repository.save(game);
 //      프론트에 반환하는 값 중 딜러의 두 번째 카드와 승패 여부는 숨겨서 반환
-        return new GameResponse(saved.getUserId(), saved.getId(), saved.getBettingChips(), temp, saved.getPlayerCards(), false);
+        return new GameResponse(saved.getUserId(), saved.getId(), saved.getBettingChips(), temp, saved.getPlayerCards(), 0);
     }
 
     public List<GameResponse> getAll() {
         return repository.findAll().stream()
 //              필터로 승리한 경우만, 베팅 칩으로 정렬 후, 상위 50위에 속하는 게임만 반환
-                .map(g -> new GameResponse(g.getUserId(), g.getId(), g.getBettingChips(), g.getDealerCards(), g.getPlayerCards(), g.isWin()))
-                .filter(GameResponse::isWin)
+                .map(g -> new GameResponse(g.getUserId(), g.getId(), g.getBettingChips(), g.getDealerCards(), g.getPlayerCards(), g.getResult()))
+                .filter(g -> g.getResult().equals(1))
                 .sorted((a, b) -> (int) (a.getBettingChips() - b.getBettingChips()))
                 .limit(50)
                 .toList();
@@ -73,7 +79,7 @@ public class GameService {
 
     public GameResponse getById(Long id) {
         return repository.findById(id)
-                .map(g -> new GameResponse(g.getUserId(), g.getId(), g.getBettingChips(), g.getDealerCards(), g.getPlayerCards(), g.isWin()))
+                .map(g -> new GameResponse(g.getUserId(), g.getId(), g.getBettingChips(), g.getDealerCards(), g.getPlayerCards(), g.getResult()))
                 .orElse(null);
     }
 
@@ -81,13 +87,15 @@ public class GameService {
 //      요청받은 유저의 id가 유저 정보에 존재하지 않는 경우 예외 발생
         userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
 //      id값과 베팅 칩으로 베팅칩만 덮어쓰기
         return repository.findById(id)
+                .filter(g -> g.getBettingChips() <= request.getBettingChips())
                 .map(g -> {
                     g.setBettingChips(request.getBettingChips());
-                    return new GameResponse(g.getUserId(), g.getId(), g.getBettingChips(), g.getDealerCards(), g.getPlayerCards(), g.isWin());
+                    return new GameResponse(g.getUserId(), g.getId(), g.getBettingChips(), g.getDealerCards(), g.getPlayerCards(), g.getResult());
                 })
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("베팅은 이전 베팅보다 커야 합니다."));
     }
 
     public boolean delete(Long id) {
