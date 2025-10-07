@@ -17,7 +17,7 @@ public class MenuService {
     private final MenuRepository repository;
 
     public MenuResponse create(MenuRequest request) {
-        Menu menu = new Menu(null, request.getName(), request.getPrice());
+        Menu menu = Menu.create(request.getName(), request.getPrice());
         Menu saved = repository.save(menu);
         return new MenuResponse(saved.getId(), saved.getName(), saved.getPrice());
     }
