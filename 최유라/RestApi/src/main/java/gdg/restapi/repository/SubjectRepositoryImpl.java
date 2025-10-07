@@ -24,7 +24,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
     @Override
     public List<Subject> findAll() {
-        return new ArrayList<>(basket.values());
+        return List.copyOf(basket.values()); //basket 내용 복사한 새로운 리스트 생성 후 반환(수정 불가, 단순 조회 리스트)
     }
 
     @Override

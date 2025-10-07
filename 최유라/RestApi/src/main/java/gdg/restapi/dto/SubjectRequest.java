@@ -1,5 +1,6 @@
 package gdg.restapi.dto;
 
+import gdg.restapi.domain.Subject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

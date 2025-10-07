@@ -16,8 +16,14 @@ public class SubjectService {
 
     private final SubjectRepository repository;
 
+//    public SubjectResponse create(SubjectRequest request) {
+//        Subject subject = new Subject(null, request.getName(), request.getUnit());
+//        Subject saved = repository.save(subject);
+//        return new SubjectResponse(saved.getId(), saved.getName(), saved.getUnit());
+//    }
+
     public SubjectResponse create(SubjectRequest request) {
-        Subject subject = new Subject(null, request.getName(), request.getUnit());
+        Subject subject = Subject.create(request.getName(), request.getUnit());
         Subject saved = repository.save(subject);
         return new SubjectResponse(saved.getId(), saved.getName(), saved.getUnit());
     }
@@ -26,6 +32,7 @@ public class SubjectService {
         return repository.findAll().stream()
                 .map(s -> new SubjectResponse(s.getId(), s.getName(), s.getUnit()))
                 .collect(Collectors.toList());
+        //repository의 findAll()실행 후 stream()내용 수행?
     }
 
     public SubjectResponse getById(Long id) {
