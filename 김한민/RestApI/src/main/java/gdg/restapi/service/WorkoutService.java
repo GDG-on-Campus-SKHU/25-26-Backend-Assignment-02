@@ -101,5 +101,4 @@ public class WorkoutService {
     private String emptyToNull(String s) {
         return (s != null && s.isBlank()) ? null : sanitize(s);
     }
-
 }
