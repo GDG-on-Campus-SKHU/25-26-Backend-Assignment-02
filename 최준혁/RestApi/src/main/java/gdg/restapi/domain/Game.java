@@ -18,6 +18,7 @@ public class Game {
     private Long[] dealerCards;
     //  플레이어의 카드 합
     private Long[] playerCards;
-    //  플레이어가 이겼는 지 여부
-    private boolean isWin;
+    //  플레이어가 이겼는 지 여부 win: 1, draw: 0, lose: -1
+    private Integer result;
+
 }

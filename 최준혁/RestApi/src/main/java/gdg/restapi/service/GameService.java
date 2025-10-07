@@ -1,6 +1,5 @@
 package gdg.restapi.service;
 
-
 import gdg.restapi.domain.Game;
 import gdg.restapi.dto.GameRequest;
 import gdg.restapi.dto.GameResponse;
@@ -10,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,7 +68,7 @@ public class GameService {
                 .filter(GameResponse::isWin)
                 .sorted((a, b) -> (int) (a.getBettingChips() - b.getBettingChips()))
                 .limit(50)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public GameResponse getById(Long id) {
@@ -79,7 +77,7 @@ public class GameService {
                 .orElse(null);
     }
 
-    public GameResponse updateBettingChips(Long id, GameRequest request) {
+    public GameResponse update(Long id, GameRequest request) {
 //      요청받은 유저의 id가 유저 정보에 존재하지 않는 경우 예외 발생
         userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));

@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,18 +15,18 @@ public class UserService {
     private final UserRepository repository;
 
     public UserResponse create(UserRequest request) {
-        User user= new User(null, request.getName(), request.getRecord(), request.getDollar(), request.getCardSkins());
+        User user= new User(null, request.getName(), (long)0, (long)0, new boolean[]{false});
         User saved = repository.save(user);
         return new UserResponse(saved.getId(), saved.getName(), saved.getRecord(), saved.getDollar(), saved.getCardSkins());
     }
 
     public List<UserResponse> getAll() {
-//      유저 중 최고기록으로 정렬 후 상위 50위만 반환
+    //  유저 중 최고기록으로 정렬 후 상위 50위만 반환
         return repository.findAll().stream()
                 .map(u -> new UserResponse(u.getId(), u.getName(), u.getRecord(), u.getDollar(), u.getCardSkins()))
                 .sorted((a, b) -> (int) (a.getRecord() - b.getRecord()))
                 .limit(50)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public UserResponse getById(Long id) {
@@ -35,13 +34,11 @@ public class UserService {
                 .map(u -> new UserResponse(u.getId(), u.getName(), u.getRecord(), u.getDollar(), u.getCardSkins()))
                 .orElse(null);
     }
-    public UserResponse updateName(Long id, UserRequest request) {
+
+    public UserResponse update(Long id, UserRequest request) {
         return repository.findById(id)
                 .map(u -> {
                     u.setName(request.getName());
-                    u.setRecord(request.getRecord());
-                    u.setDollar(request.getDollar());
-                    u.setCardSkins(request.getCardSkins());
                     return new UserResponse(u.getId(), u.getName(), u.getRecord(), u.getDollar(), u.getCardSkins());
                 })
                 .orElse(null);

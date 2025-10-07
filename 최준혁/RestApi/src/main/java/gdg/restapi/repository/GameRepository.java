@@ -1,7 +1,6 @@
 package gdg.restapi.repository;
 
 import gdg.restapi.domain.Game;
-import gdg.restapi.domain.User;
 
 import java.util.List;
 import java.util.Optional;

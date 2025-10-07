@@ -2,12 +2,8 @@ package gdg.restapi.controller;
 
 import gdg.restapi.dto.GameRequest;
 import gdg.restapi.dto.GameResponse;
-import gdg.restapi.dto.UserRequest;
-import gdg.restapi.dto.UserResponse;
 import gdg.restapi.repository.UserRepository;
-import gdg.restapi.repository.UserRepositoryImpl;
 import gdg.restapi.service.GameService;
-import gdg.restapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +36,7 @@ public class GameController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<GameResponse> update(@PathVariable Long id, @RequestBody GameRequest request) {
-        GameResponse response = service.updateBettingChips(id, request);
+        GameResponse response = service.update(id, request);
         return (response != null) ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
 

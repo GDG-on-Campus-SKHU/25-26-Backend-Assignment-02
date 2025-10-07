@@ -33,7 +33,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponse> update(@PathVariable Long id, @RequestBody UserRequest request) {
-        UserResponse response = service.updateName(id, request);
+        UserResponse response = service.update(id, request);
         return (response != null) ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
 
