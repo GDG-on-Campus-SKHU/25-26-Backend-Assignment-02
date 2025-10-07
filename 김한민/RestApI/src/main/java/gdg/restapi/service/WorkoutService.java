@@ -22,15 +22,14 @@ public class WorkoutService {
     private final WorkoutRepository repo;
 
     public WorkoutResponse create(WorkoutRequest req) {
-        Workout w = new Workout(
-                null,
-                req.getName(),
-                req.getCategory(),
-                req.getDurationMin(),
-                req.getCalories(),
-                req.getMemo(),
-                req.getPerformedAt()
-        );
+        Workout w = Workout.builder()
+                .name(req.getName())
+                .category(req.getCategory())
+                .durationMin(req.getDurationMin())
+                .calories(req.getCalories())
+                .memo(req.getMemo())
+                .performedAt(req.getPerformedAt())
+                .build();
         return toRes(repo.save(w));
     }
 
@@ -48,35 +47,39 @@ public class WorkoutService {
         return repo.findById(id).map(this::toRes);
     }
 
+    // PUT: 전체 변경(요청으로 덮어쓰기) — POST와 동일하게 sanitize
     public Optional<WorkoutResponse> putUpdate(Long id, WorkoutRequest req) {
         return repo.findById(id).map(found -> {
-            found.setName(req.getName());
-            found.setCategory(req.getCategory());
-            found.setDurationMin(req.getDurationMin());
-            found.setCalories(req.getCalories());
-            found.setMemo(req.getMemo());
-            found.setPerformedAt(req.getPerformedAt());
-            return toRes(repo.update(id, found));
+            Workout updated = found.toBuilder()
+                    .name(req.getName())
+                    .category(sanitize(req.getCategory()))
+                    .durationMin(req.getDurationMin())
+                    .calories(req.getCalories())
+                    .memo(sanitize(req.getMemo()))
+                    .performedAt(req.getPerformedAt())
+                    .build();
+            return toRes(repo.update(id, updated));
         });
     }
 
-    /** PATCH: null 아닌 값만 반영 */
+    // PATCH: null 아닌 값만 반영 + 문자열은 "" → null 변환
     public Optional<WorkoutResponse> patchUpdate(Long id, WorkoutPatchRequest req) {
         return repo.findById(id).map(found -> {
-            if (req.getName() != null)        found.setName(req.getName());
-            if (req.getCategory() != null)    found.setCategory(req.getCategory());
-            if (req.getDurationMin() != null) found.setDurationMin(req.getDurationMin());
-            if (req.getCalories() != null)    found.setCalories(req.getCalories());
-            if (req.getMemo() != null)        found.setMemo(req.getMemo());
-            if (req.getPerformedAt() != null) found.setPerformedAt(req.getPerformedAt());
-            return toRes(repo.update(id, found));
+            Workout.WorkoutBuilder b = found.toBuilder();
+            if (req.getName() != null)        b.name(emptyToNull(req.getName()));
+            if (req.getCategory() != null)    b.category(emptyToNull(req.getCategory()));
+            if (req.getDurationMin() != null) b.durationMin(req.getDurationMin());
+            if (req.getCalories() != null)    b.calories(req.getCalories());
+            if (req.getMemo() != null)        b.memo(emptyToNull(req.getMemo()));
+            if (req.getPerformedAt() != null) b.performedAt(req.getPerformedAt());
+            Workout updated = b.build();
+            return toRes(repo.update(id, updated));
         });
     }
 
     public boolean delete(Long id) {
         return repo.delete(id);
     }
-
 
     private WorkoutResponse toRes(Workout w) {
         return new WorkoutResponse(
@@ -89,4 +92,14 @@ public class WorkoutService {
                 w.getPerformedAt()
         );
     }
+    // 공백/빈문자열을 null로 정리(POST/PUT 공통
+    private String sanitize(String s) {
+        return (s == null || s.isBlank()) ? null : s.trim();
+    }
+
+    // PATCH 전용: 요청이 왔을 때 "" -> null 로 간주
+    private String emptyToNull(String s) {
+        return (s != null && s.isBlank()) ? null : sanitize(s);
+    }
+
 }

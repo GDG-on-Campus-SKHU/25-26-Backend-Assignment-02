@@ -16,9 +16,9 @@ public class WorkoutRepositoryImpl implements WorkoutRepository {
 
     @Override
     public Workout save(Workout workout) {
-        workout.setId(++sequence);
-        store.put(workout.getId(), workout);
-        return workout;
+        Workout saved = workout.toBuilder().id(++sequence).build();
+        store.put(saved.getId(), saved);
+        return saved;
     }
 
     @Override

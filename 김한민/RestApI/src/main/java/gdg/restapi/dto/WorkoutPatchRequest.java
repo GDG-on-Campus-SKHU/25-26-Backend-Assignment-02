@@ -1,4 +1,5 @@
 package gdg.restapi.dto;
+
 import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
@@ -6,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** 부분 수정용: null인 필드는 무시 */
+/** 부분 수정: null/""는 서비스에서 정리 */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,4 +20,3 @@ public class WorkoutPatchRequest {
     private String memo;
     private LocalDate performedAt;
 }
-
