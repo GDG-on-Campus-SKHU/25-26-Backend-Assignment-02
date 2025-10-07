@@ -2,7 +2,6 @@ package gdg.restapi.controller;
 
 import gdg.restapi.dto.GameRequest;
 import gdg.restapi.dto.GameResponse;
-import gdg.restapi.repository.UserRepository;
 import gdg.restapi.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor // final 필드 자동 생성자
 public class GameController {
     private final GameService service;
-    private final UserRepository userRepository;
 
     @PostMapping
     public ResponseEntity<GameResponse> create(@RequestBody GameRequest request) {
