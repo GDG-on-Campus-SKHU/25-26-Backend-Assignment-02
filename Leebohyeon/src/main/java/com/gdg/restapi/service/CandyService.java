@@ -18,7 +18,7 @@ public class CandyService {
 
 
     public CandyResponse create(CandyRequest request) {
-        Candy candy = new Candy(null, request.getName(), request.getPrice());
+        Candy candy = Candy.of(request.getName(), request.getPrice());
         Candy saved = repository.save(candy);
         return new CandyResponse(saved.getId(), saved.getName(), saved.getPrice());
     }
@@ -26,13 +26,16 @@ public class CandyService {
     public List<CandyResponse> getAll() {
         return repository.findAll().stream()
                 .map(s -> new CandyResponse(s.getId(), s.getName(), s.getPrice()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
+
     public CandyResponse getById(Long id) {
-        return repository.findById(id)
-                .map(s -> new CandyResponse(s.getId(), s.getName(), s.getPrice()))
-                .orElse(null);
+        Candy candy = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Candy not found with id: " + id));
+
+        return CandyResponse.from(candy);
     }
+
     public CandyResponse update(Long id, CandyRequest request) {
         return repository.findById(id).map(candy -> {
             candy.setName(request.getName());
@@ -42,6 +45,7 @@ public class CandyService {
                     updated.getPrice());
         }).orElse(null);
     }
+
     public boolean delete(Long id) {
         return repository.delete(id);
     }
