@@ -19,18 +19,18 @@ public class StationService {
     public StationResponse create(StationRequest request) {
         Station station = new Station(null, request.getStation(), request.getLine());
         Station saved = repository.save(station);
-        return new StationResponse(saved.getId(), saved.getStation(), saved.getLine());
+        return StationResponse.from(saved);
     }
 
     public List<StationResponse> getAll() {
         return repository.findAll().stream()
-                .map(s -> new StationResponse(s.getId(), s.getStation(), s.getLine()))
+                .map(s -> StationResponse.from(s))
                 .collect(Collectors.toList());
     }
 
     public StationResponse getById(Long id) {
         return repository.findById(id)
-                .map(s -> new StationResponse(s.getId(), s.getStation(), s.getLine()))
+                .map(s -> StationResponse.from(s))
                 .orElse(null);
     }
 
@@ -39,7 +39,7 @@ public class StationService {
             Station.setStation(request.getStation());
             Station.setLine(request.getLine());
             Station updated = repository.update(id, Station);
-            return new StationResponse(updated.getId(), updated.getStation(), updated.getLine());
+            return StationResponse.from(updated);
         }).orElse(null);
     }
 
