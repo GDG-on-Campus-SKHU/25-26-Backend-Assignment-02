@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,8 +40,11 @@ public class StationService {
             Station.setStation(request.getStation());
             Station.setLine(request.getLine());
             Station updated = repository.update(id, Station);
+            if (updated == null) {
+                throw new IllegalStateException("id " + id + "에 해당하는 역을 업데이트할 수 없습니다.");
+            }
             return StationResponse.from(updated);
-        }).orElse(null);
+        }).orElseThrow(() -> new NoSuchElementException("id " + id + "에 해당하는 역을 찾을 수 없습니다."));
     }
 
     public boolean delete(Long id) {
