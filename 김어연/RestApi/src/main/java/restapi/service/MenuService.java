@@ -19,18 +19,18 @@ public class MenuService {
     public MenuResponse create(MenuRequest request) {
         Menu menu = Menu.create(request.getName(), request.getPrice());
         Menu saved = repository.save(menu);
-        return new MenuResponse(saved.getId(), saved.getName(), saved.getPrice());
+        return MenuResponse.from(saved);
     }
 
     public List<MenuResponse> getAll() {
         return repository.findAll().stream()
-                .map(m -> new MenuResponse(m.getId(), m.getName(), m.getPrice()))
+                .map(MenuResponse::from)
                 .toList();
     }
 
     public MenuResponse getById(Long id) {
         return repository.findById(id)
-                .map(m -> new MenuResponse(m.getId(), m.getName(), m.getPrice()))
+                .map(MenuResponse::from)
                 .orElse(null);
     }
 
@@ -39,7 +39,7 @@ public class MenuService {
             menu.setName(request.getName());
             menu.setPrice(request.getPrice());
             Menu updated = repository.update(id, menu);
-            return new MenuResponse(updated.getId(), updated.getName(), updated.getPrice());
+            return MenuResponse.from(updated);
         }).orElse(null);
     }
 
