@@ -35,7 +35,7 @@ public class LectureController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<LectureResponse> update(@PathVariable Long id, @Valid @RequestBody LectureRequest request) {
         LectureResponse response = lectureService.update(id, request);
         return ResponseEntity.ok(response);
