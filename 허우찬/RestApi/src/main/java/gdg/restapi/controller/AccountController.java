@@ -3,6 +3,7 @@ package gdg.restapi.controller;
 import gdg.restapi.dto.AccountRequest;
 import gdg.restapi.dto.AccountResponse;
 import gdg.restapi.service.AccountService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,12 +13,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/accounts")
 @RequiredArgsConstructor
+
 public class AccountController {
 
     private final AccountService service;
 
     @PostMapping
-    public ResponseEntity<AccountResponse> create(@RequestBody AccountRequest request) {
+    public ResponseEntity<AccountResponse> create(@RequestBody @Valid AccountRequest request) {
         return ResponseEntity.ok(service.create(request));
     }
 
@@ -32,7 +34,7 @@ public class AccountController {
         return (response != null) ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<AccountResponse> update(@PathVariable Long id, @RequestBody AccountRequest request) {
         AccountResponse response = service.update(id, request);
         return (response != null) ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
@@ -43,3 +45,4 @@ public class AccountController {
         return service.delete(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }
+

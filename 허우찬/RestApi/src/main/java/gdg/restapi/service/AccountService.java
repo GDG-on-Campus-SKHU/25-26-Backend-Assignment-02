@@ -7,7 +7,7 @@ import gdg.restapi.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,29 +18,59 @@ public class AccountService {
     private final AccountRepository repository;
 
     public AccountResponse create(AccountRequest request) {
-        Account account = new Account(null, request.getName(), request.getAccountNumber(), LocalDateTime.now().toString());
+        Account account = Account.builder()
+                .id(null)
+                .name(request.getName())
+                .accountNumber(request.getAccountNumber())
+                .createdDate(LocalDate.now())
+                .build();
+
         Account saved = repository.save(account);
-        return new AccountResponse(saved.getId(), saved.getName(), saved.getAccountNumber(), saved.getCreatedDate());
+        return new AccountResponse(saved.getId(), saved.getName(), saved.getAccountNumber(),
+                saved.getCreatedDate().toString());
     }
 
     public List<AccountResponse> getAll() {
         return repository.findAll().stream()
-                .map(a -> new AccountResponse(a.getId(), a.getName(), a.getAccountNumber(), a.getCreatedDate()))
-                .collect(Collectors.toList());
+                .map(a -> new AccountResponse(
+                        a.getId(),
+                        a.getName(),
+                        a.getAccountNumber(),
+                        a.getCreatedDate().toString()
+                ))
+                .toList();
     }
 
     public AccountResponse getById(Long id) {
         return repository.findById(id)
-                .map(a -> new AccountResponse(a.getId(), a.getName(), a.getAccountNumber(), a.getCreatedDate()))
+                .map(a -> new AccountResponse(
+                        a.getId(),
+                        a.getName(),
+                        a.getAccountNumber(),
+                        a.getCreatedDate().toString()
+                ))
                 .orElse(null);
     }
 
     public AccountResponse update(Long id, AccountRequest request) {
-        return repository.findById(id).map(account -> {
-            account.setName(request.getName());
-            account.setAccountNumber(request.getAccountNumber());
-            Account updated = repository.update(id, account);
-            return new AccountResponse(updated.getId(), updated.getName(), updated.getAccountNumber(), updated.getCreatedDate());
+        return repository.findById(id).map(existing -> {
+            Account updated = Account.builder()
+                    .id(existing.getId())
+                    .name(request.getName())
+                    .accountNumber(request.getAccountNumber())
+                    .createdDate(existing.getCreatedDate())
+                    .build();
+
+            Account saved = repository.update(id, updated);
+
+            String createdDateStr = saved.getCreatedDate().toString();
+
+            return new AccountResponse(
+                    saved.getId(),
+                    saved.getName(),
+                    saved.getAccountNumber(),
+                    createdDateStr
+            );
         }).orElse(null);
     }
 

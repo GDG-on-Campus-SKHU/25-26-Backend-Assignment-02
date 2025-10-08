@@ -1,16 +1,25 @@
 package gdg.restapi.domain;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+import java.time.LocalDate;
+
+@Getter
+@ToString
 public class Account {
-    private Long id;
-    private String name;
-    private String accountNumber;
-    private String createdDate;
+    private final Long id;
+    private final String name;
+    private final String accountNumber;
+    private final LocalDate createdDate;
+
+    @Builder
+    public Account(Long id, String name, String accountNumber, LocalDate createdDate) {
+        this.id = id;
+        this.name = name;
+        this.accountNumber = accountNumber;
+        this.createdDate = createdDate;
+    }
 }

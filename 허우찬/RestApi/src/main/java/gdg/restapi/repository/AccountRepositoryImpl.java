@@ -13,14 +13,25 @@ import java.util.Optional;
 
 @Repository
 public class AccountRepositoryImpl implements AccountRepository {
-    private final Map<Long, Account> store = new HashMap<>();
-    private Long sequence = 0L;
+
+    private final Map<String, Account> store = new HashMap<>();
+    private long sequence = 0L;
 
     @Override
     public Account save(Account account) {
-        account.setId(++sequence);
-        store.put(account.getId(), account);
-        return account;
+        if (store.containsKey(account.getAccountNumber())) {
+            throw new IllegalArgumentException("이미 존재하는 계좌번호입니다: " + account.getAccountNumber());
+        }
+
+        Account saved = Account.builder()
+                .id(++sequence)
+                .name(account.getName())
+                .accountNumber(account.getAccountNumber())
+                .createdDate(account.getCreatedDate())
+                .build();
+
+        store.put(saved.getAccountNumber(), saved);
+        return saved;
     }
 
     @Override
@@ -30,18 +41,35 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Optional<Account> findById(Long id) {
-        return Optional.ofNullable(store.get(id));
+        return store.values().stream()
+                .filter(a -> a.getId().equals(id))
+                .findFirst();
     }
 
     @Override
-    public Account update(Long id, Account account) {
-        account.setId(id);
-        store.put(id, account);
-        return account;
+    public Account update(Long id, Account updated) {
+        Optional<Account> existingOpt = findById(id);
+        if (existingOpt.isEmpty()) return null;
+
+        Account existing = existingOpt.get();
+
+        if (!existing.getAccountNumber().equals(updated.getAccountNumber()) &&
+                store.containsKey(updated.getAccountNumber())) {
+            throw new IllegalArgumentException("이미 존재하는 계좌번호입니다: " + updated.getAccountNumber());
+        }
+
+        store.remove(existing.getAccountNumber());
+        store.put(updated.getAccountNumber(), updated);
+
+        return updated;
     }
 
     @Override
     public boolean delete(Long id) {
-        return store.remove(id) != null;
+        Optional<Account> existingOpt = findById(id);
+        if (existingOpt.isEmpty()) return false;
+
+        store.remove(existingOpt.get().getAccountNumber());
+        return true;
     }
 }
