@@ -2,14 +2,14 @@ package gdg.restapi.dto;
 
 import gdg.restapi.domain.Todo;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
 public class TodoResponse {
-    private Long id;
-    private String title;
-    private boolean completed;
+    private final Long id;           
+    private final String title;
+    private final boolean completed;
 
     public static TodoResponse from(Todo todo) {
         return new TodoResponse(todo.getId(), todo.getTitle(), todo.isCompleted());

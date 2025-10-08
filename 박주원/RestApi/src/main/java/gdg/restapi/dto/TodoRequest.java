@@ -1,11 +1,11 @@
 package gdg.restapi.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
 public class TodoRequest {
-    private String title;
-    private boolean completed;
+    private final String title;
+    private final boolean completed;
 }
