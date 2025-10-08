@@ -2,7 +2,6 @@ package com.gdg.restapi.repository;
 
 import com.gdg.restapi.domain.User;
 import org.springframework.stereotype.Repository;
-
 import java.util.*;
 
 @Repository
