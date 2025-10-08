@@ -23,7 +23,8 @@ public class UserService {
                 build();
 
         User store = repository.save(user);
-        return new UserResponse(store.getUserId(),
+        return new UserResponse(
+                store.getUserId(),
                 store.getName(),
                 store.getPhone(),
                 store.getEmail());

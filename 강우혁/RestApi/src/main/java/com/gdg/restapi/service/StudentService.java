@@ -14,24 +14,35 @@ public class StudentService {
     private final StudentRepository repository;
 
     public StudentResponse create(StudentRequest request){
-        Student student = new Student(null, request.getName(),request.getMajor());
+        Student student = Student.builder()
+                .id(null)
+                .name(request.name())
+                .major(request.major())
+                .build();
         Student saved = repository.save(student);
         return new StudentResponse(saved.getId(), saved.getName(), saved.getMajor());
     }
     public List<StudentResponse> getAll() {
         return repository.findAll().stream()
-                .map(s->new StudentResponse(s.getId(),s.getName(),s.getMajor()))
+                .map(student->new StudentResponse(
+                        student.getId(),
+                        student.getName(),
+                        student.getMajor()))
                 .collect(Collectors.toList());
     }
     public StudentResponse getById(Long id) {
-        return repository.findById(id).map(s->new StudentResponse(s.getId(),s.getName(),s.getMajor()))
+        return repository.findById(id).map(student->
+                        new StudentResponse(
+                                student.getId(),
+                                student.getName(),
+                                student.getMajor()))
                 .orElse(null);
     }
     public StudentResponse update(Long id, StudentRequest request) {
-        return repository.findById(id).map(s->{
-            s.setName(request.getName());
-            s.setMajor(request.getMajor());
-            Student updated = repository.update(id, s);
+        return repository.findById(id).map(student->{
+            student.setName(request.name());
+            student.setMajor(request.major());
+            Student updated = repository.update(id, student);
             return new StudentResponse(updated.getId(), updated.getName(), updated.getMajor());
         }).orElse(null);
     }
