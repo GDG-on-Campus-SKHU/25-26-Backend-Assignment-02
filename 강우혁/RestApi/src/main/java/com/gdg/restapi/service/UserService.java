@@ -1,62 +1,94 @@
 package com.gdg.restapi.service;
 
 import com.gdg.restapi.domain.User;
-import com.gdg.restapi.dto.StudentResponse;
 import com.gdg.restapi.dto.UserRequest;
 import com.gdg.restapi.dto.UserResponse;
+import com.gdg.restapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.*;
-import java.util.stream.Collectors;
 
-import com.gdg.restapi.repository.UserRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepository r;
+    private final UserRepository repository;
 
     public UserResponse create(UserRequest request){
-        User u = new User(null, request.getName(), request.getPhone(), request.getEmail());
-        User s = r.save(u);
-        return new UserResponse(s.getUserId(),s.getName(),s.getPhone(), s.getEmail());
+        User user = User.builder().
+                name(request.name()).
+                phone(request.phone()).
+                email(request.email()).
+                build();
+
+        User store = repository.save(user);
+        return new UserResponse(store.getUserId(),
+                store.getName(),
+                store.getPhone(),
+                store.getEmail());
     }
 
     public List<UserResponse> getAll(){
-        return r.findAll().stream().
-                map(u -> new UserResponse(u.getUserId(),u.getName(),u.getPhone(),u.getEmail())).
+        return repository.findAll().stream()
+                .map(user -> new UserResponse(
+                        user.getUserId(),
+                        user.getName(),
+                        user.getPhone(),
+                        user.getEmail())).
                 collect(Collectors.toList());
     }
     public UserResponse getByUserId(Long userId){
-        return r.findByUserId(userId).map(u-> new UserResponse(u.getUserId(),u.getName(),u.getPhone(),u.getEmail()))
-                .orElse(null);
+        return repository.findByUserId(userId)
+                .map(user-> new UserResponse(
+                                user.getUserId(),
+                                user.getName(),
+                                user.getPhone(),
+                                user.getEmail())).
+                orElse(null);
     }
     public List<UserResponse> getByName(String name){
-        return r.findByName(name).stream()
-                .map(u-> new UserResponse(u.getUserId(),u.getName(),u.getPhone(),u.getEmail()))
+        return repository.findByName(name).stream()
+                .map(user-> new UserResponse(
+                        user.getUserId(),
+                        user.getName(),
+                        user.getPhone(),
+                        user.getEmail()))
                 .collect(Collectors.toList());
     }
     public List<UserResponse> getByPhone(String phone){
-        return r.findByPhone(phone).stream()
-                .map(u-> new UserResponse(u.getUserId(),u.getName(),u.getPhone(),u.getEmail()))
+        return repository.findByPhone(phone).stream()
+                .map(user-> new UserResponse(
+                        user.getUserId(),
+                        user.getName(),
+                        user.getPhone(),
+                        user.getEmail()))
                 .collect(Collectors.toList());
     }
     public List<UserResponse> getByEmail(String Email){
-        return r.findByEmail(Email).stream()
-                .map(u-> new UserResponse(u.getUserId(),u.getName(),u.getPhone(),u.getEmail()))
+        return repository.findByEmail(Email).stream()
+                .map(user-> new UserResponse(
+                        user.getUserId(),
+                        user.getName(),
+                        user.getPhone(),
+                        user.getEmail()))
                 .collect(Collectors.toList());
     }
     public UserResponse update(Long userId, UserRequest request){
-        return r.findByUserId(userId).map(u->{
-            u.setName(request.getName());
-            u.setPhone(request.getPhone());
-            u.setEmail(request.getEmail());
-            User s = r.update(userId, u);
-            return new UserResponse(s.getUserId(),s.getName(),s.getPhone(),s.getEmail());
+        return repository.findByUserId(userId).map(user->{
+            user.setName(request.name());
+            user.setPhone(request.phone());
+            user.setEmail(request.email());
+            User update = repository.update(userId, user);
+            return new UserResponse(
+                    update.getUserId(),
+                    update.getName(),
+                    update.getPhone(),
+                    update.getEmail());
         }).orElse(null);
     }
     public boolean delete(Long userId){
-        return r.delete(userId);
+        return repository.delete(userId);
     }
 
 }
