@@ -37,9 +37,4 @@ public class TodoRepositoryImpl implements TodoRepository {
     public boolean delete(Long id) {
         return store.remove(id) != null;
     }
-
-    public void clear() {
-        store.clear();
-        sequence = 0L;
-    }
 }
