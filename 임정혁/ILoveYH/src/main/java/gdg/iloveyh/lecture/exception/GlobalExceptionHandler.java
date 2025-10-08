@@ -1,5 +1,6 @@
 package gdg.iloveyh.lecture.exception;
 
+import gdg.iloveyh.review.exception.ReviewNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,6 +20,17 @@ public class GlobalExceptionHandler {
         Map<String, Object> errorResponse = createErrorResponse(
             HttpStatus.NOT_FOUND.value(),
             "LECTURE_NOT_FOUND",
+            ex.getMessage()
+        );
+        
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+    
+    @ExceptionHandler(ReviewNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleReviewNotFoundException(ReviewNotFoundException ex) {
+        Map<String, Object> errorResponse = createErrorResponse(
+            HttpStatus.NOT_FOUND.value(),
+            "REVIEW_NOT_FOUND",
             ex.getMessage()
         );
         
