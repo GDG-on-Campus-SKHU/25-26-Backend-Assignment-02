@@ -30,13 +30,13 @@ class TodoController {
     @GetMapping("/{id}")
     public ResponseEntity<TodoResponse> getById(@PathVariable Long id){
         TodoResponse response = service.getById(id);
-        return (response != null) ? ok(response) : ResponseEntity.notFound().build();
+        return (response == null) ? ResponseEntity.notFound().build() : ok(response);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<TodoResponse> update(@PathVariable Long id, @RequestBody TodoRequest request){
         TodoResponse response = service.update(id, request);
-        return (response != null) ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
+        return (response == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
@@ -44,4 +44,3 @@ class TodoController {
         return service.delete(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }
-//push test

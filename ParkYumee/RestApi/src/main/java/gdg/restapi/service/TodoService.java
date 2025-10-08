@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,31 +16,87 @@ public class TodoService {
     private final TodoRepository repository;
 
     public TodoResponse create(TodoRequest request) {
-        Todo todo = new Todo(null, request.getTitle(), request.getContent(), request.isWeekly());
+        Todo todo = Todo.builder()
+                .title(request.getTitle())
+                .content(request.getContent())
+                .isWeekly(request.isWeekly())
+                .build();
+
         Todo saved = repository.save(todo);
-        return new TodoResponse(saved.getId(), saved.getTitle(), saved.getContent(), saved.isWeekly());
+
+        return TodoResponse.builder()
+                .id(saved.getId())
+                .todoTitle(saved.getTitle())
+                .todoContent(saved.getContent())
+                .isWeekly(saved.isWeekly())
+                .build();
+
     }
 
+    //    public List<TodoResponse> getAll() {
+//        return repository.findAll().stream()
+//                .map(t -> new TodoResponse(t.getId(),t.getTitle(),t.getContent(),t.isWeekly()))
+//                .collect(Collectors.toList());
+//    }
     public List<TodoResponse> getAll() {
         return repository.findAll().stream()
-                .map(t -> new TodoResponse(t.getId(),t.getTitle(),t.getContent(),t.isWeekly()))
-                .collect(Collectors.toList());
+                .map(t -> TodoResponse.builder()
+                        .id(t.getId())
+                        .todoTitle(t.getTitle())
+                        .todoContent(t.getContent())
+                        .isWeekly(t.isWeekly())
+                        .build())
+                .toList();
     }
 
+    //    public TodoResponse getById(Long id) {
+//        return repository.findById(id)
+//                .map(t -> new TodoResponse(t.getId(),t.getTitle(),t.getContent(),t.isWeekly()))
+//                .orElse(null);
+//    }
     public TodoResponse getById(Long id) {
         return repository.findById(id)
-                .map(t -> new TodoResponse(t.getId(),t.getTitle(),t.getContent(),t.isWeekly()))
+                .map(t -> TodoResponse.builder()
+                        .id(t.getId())
+                        .todoTitle(t.getTitle())
+                        .todoContent(t.getContent())
+                        .isWeekly(t.isWeekly())
+                        .build())
                 .orElse(null);
     }
 
+//    public TodoResponse update(Long id, TodoRequest request) {
+//        return repository.findById(id).map(todo -> {
+//            todo.setTitle(request.getTitle());
+//            todo.setContent(request.getContent());
+//
+
+//            Todo updated = repository.update(id, todo);
+
+//            return new TodoResponse(updated.getId(), updated.getTitle(), updated.getContent(), updated.isWeekly());
+//        }).orElse(null);
+//    }
+
     public TodoResponse update(Long id, TodoRequest request) {
-        return repository.findById(id).map(todo -> {
-            todo.setTitle(request.getTitle());
-            todo.setContent(request.getContent());
-            todo.setWeekly(request.isWeekly());
-            Todo updated = repository.update(id, todo);
-            return new TodoResponse(updated.getId(), updated.getTitle(), updated.getContent(), updated.isWeekly());
-        }).orElse(null);
+        return repository.findById(id)
+                .map(t ->
+                {Todo todo = Todo.builder()
+                        .id(t.getId())
+                        .title(request.getTitle())
+                        .content(request.getContent())
+                        .isWeekly(request.isWeekly())
+                        .build();
+
+                    Todo update = repository.update(id, todo);
+
+                    return TodoResponse.builder()
+                            .id(update.getId())
+                            .todoTitle(update.getTitle())
+                            .todoContent(update.getContent())
+                            .isWeekly(update.isWeekly())
+                            .build();
+                })
+                .orElse(null);
     }
 
     public boolean delete(Long id) {

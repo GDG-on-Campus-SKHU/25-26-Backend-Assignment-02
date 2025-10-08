@@ -3,7 +3,12 @@ package gdg.restapi.repository;
 import gdg.restapi.domain.Todo;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 
 @Repository
 public class TodoRepositoryImpl implements TodoRepository {
@@ -12,14 +17,18 @@ public class TodoRepositoryImpl implements TodoRepository {
 
     @Override
     public Todo save(Todo todo) {
-        todo.setId(++sequence);
+        todo.id(++sequence);
         store.put(todo.getId(), todo);
         return todo;
     }
 
+    //    @Override
+//    public List<Todo> findAll() {
+//        return new ArrayList<>(store.values());
+//    }
     @Override
     public List<Todo> findAll() {
-        return new ArrayList<>(store.values());
+        return List.copyOf(store.values());
     }
 
     @Override
