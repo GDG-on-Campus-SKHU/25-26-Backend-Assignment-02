@@ -29,20 +29,23 @@ public class TodoService {
     }
 
     public TodoResponse getById(Long id) {
-        return repository.findById(id)
-                .map(TodoResponse::from)
-                .orElse(null);
+        Todo todo = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Todo not found with id " + id));
+        return TodoResponse.from(todo);
     }
 
     public TodoResponse update(Long id, TodoRequest request) {
-        return repository.findById(id).map(todo -> {
-            todo.update(request.getTitle(), request.isCompleted());
-            Todo updated = repository.update(id, todo);
-            return TodoResponse.from(updated);
-        }).orElse(null);
+        Todo todo = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Todo not found with id " + id));
+        todo.update(request.getTitle(), request.isCompleted());  // 도메인 메서드로 업데이트
+        Todo updated = repository.update(id, todo);
+        return TodoResponse.from(updated);
     }
 
-    public boolean delete(Long id) {
-        return repository.delete(id);
+    public void delete(Long id) {
+        boolean deleted = repository.delete(id);
+        if (!deleted) {
+            throw new IllegalArgumentException("Todo not found with id " + id);
+        }
     }
 }
