@@ -23,9 +23,11 @@ public class TodoService {
     }
 
     public List<TodoResponse> getAll() {
-        return repository.findAll().stream()
-                .map(TodoResponse::from)
-                .collect(Collectors.toList());
+        return List.copyOf(
+                repository.findAll().stream()
+                        .map(TodoResponse::from)
+                        .toList()
+        );
     }
 
     public TodoResponse getById(Long id) {
@@ -37,7 +39,7 @@ public class TodoService {
     public TodoResponse update(Long id, TodoRequest request) {
         Todo todo = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Todo not found with id " + id));
-        todo.update(request.getTitle(), request.isCompleted());  // 도메인 메서드로 업데이트
+        todo.update(request.getTitle(), request.isCompleted());  
         Todo updated = repository.update(id, todo);
         return TodoResponse.from(updated);
     }
