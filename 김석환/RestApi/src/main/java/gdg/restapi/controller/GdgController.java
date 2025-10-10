@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class GdgController {
     @GetMapping("/gdg")
     public String gdg(){
-        return "GDG Backend 화이팅!!";
+        return "gdg 친구들";
     }
 }
