@@ -17,8 +17,8 @@ public class TodoService {
 
     public TodoResponse create(TodoRequest request) {
         Todo todo = Todo.builder()
-                .title(request.getTitle())
-                .content(request.getContent())
+                .title(request.title())
+                .content(request.content())
                 .isWeekly(request.isWeekly())
                 .build();
 
@@ -82,8 +82,8 @@ public class TodoService {
                 .map(t ->
                 {Todo todo = Todo.builder()
                         .id(t.getId())
-                        .title(request.getTitle())
-                        .content(request.getContent())
+                        .title(request.title())
+                        .content(request.content())
                         .isWeekly(request.isWeekly())
                         .build();
 
