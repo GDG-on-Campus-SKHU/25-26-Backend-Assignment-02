@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/25-26-Backend-Assignment-02.iml" filepath="$PROJECT_DIR$/.idea/25-26-Backend-Assignment-02.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RestApi.main.iml" filepath="$PROJECT_DIR$/.idea/modules/RestApi.main.iml" />
+    </modules>
+  </component>
+</project>
